@@ -1,0 +1,190 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Prestataire;
+use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
+
+// use App\Type;
+
+// use Illuminate\Support\Facades\Validator;
+
+class PrestataireController extends Controller
+{
+    public function list(Request $request)
+    {
+        $prestataire = Prestataire::with('type')->get();
+        // $types = Type::all();
+        // $prestataire = Prestataire::get();
+        return Datatables::of($prestataire)->make(true);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('prestataires.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    // public function create()
+    // {
+    //     return view('prestataires.createprestataire');
+    // }
+    public function create(Request $request)
+    {
+        $types_id = $request->input('type'); //on recupere le prestataire
+        $type = \App\Type::find($types_id);
+
+        return view('prestataires.createprestataire', compact('type'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // validatation
+
+        $this->validate(
+            $request, [
+                'ninea' => 'required|string|max:50',
+                'registreCommerce' => 'required|string|max:50',
+                'raisonSociale' => 'required|string|max:50',
+                'telephone' => 'required|max:30|unique:prestataires,telephone',
+                // 'email' => 'required|email|max:255|unique:prestataires,email',
+                // 'bp' => 'required|string|max:50',
+            ]);
+
+        // store in the database
+        $prestataire = new Prestataire();
+
+        $prestataire->id = $request->id;
+        $prestataire->uuid = $request->uuid;
+        $prestataire->registreCommerce = $request->registreCommerce;
+        $prestataire->raisonSociale = $request->raisonSociale;
+        $prestataire->telephone = $request->telephone;
+        $prestataire->email = $request->email;
+        $prestataire->adresse = $request->adresse;
+        $prestataire->bp = $request->bp;
+        $prestataire->ninea = $request->ninea;
+        $prestataire->secteurActivite = $request->secteurActivite;
+        $prestataire->save();
+        // Session::flash('success', 'The blog post was successfully saved!');
+        // return redirect()->route('prestataires.createprestataire', $prestataire->id);
+        return view('prestataires.index');
+    }
+
+    // protected function validator(array $data)
+    // {
+    //     return Validator::make($data, [
+    //         'ninea' => ['required', 'string', 'max:50'],
+    //         'registreCommerce' => ['required', 'string', 'max:50'],
+    //         'raisonSociale' => ['required', 'string', 'max:100'],
+    //         'telephone' => ['int', 'string', 'max:100'],
+    //         'email' => ['required', 'string', 'email', 'max:255', 'unique:prestataires'],
+    //     ]);
+
+    //     return 'Enregistrement demande d\'agrement prestataire réussi';
+    // }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Prestataire $prestataire)
+    {
+        echo 'Ninea :'.$prestataire->ninea.'<br>';
+        echo 'Registre de commerce :'.$prestataire->registreCommerce.'<br>';
+        echo 'Raison sociale :'.$prestataire->raisonSociale.'<br>';
+        echo 'Telephone :'.$prestataire->telephone.'<br>';
+        // echo 'Types :'.$prestataire->types.'<br>';
+        echo 'Email :'.$prestataire->email.'<br>';
+        echo 'BP :'.$prestataire->bp.'<br>';
+        echo 'Adresse :'.$prestataire->adresse.'<br>';
+        // echo 'Date d\'agrement :'.$prestataire->created_at.'<br>';
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    // public function edit(Prestataire $prestataire)
+
+    public function edit($id)
+    {
+        // return view('prestataires.edit', compact('prestataire'));
+
+        $prestataire = Prestataire::find($id);
+
+        $message = 'modifier'.$prestataire->raisonSociale.'Edition effectuée';
+
+        // return redirect()->route('prestataires.edit')->with(compact('message'));
+
+        return view('prestataires.edit')->with(compact('prestataire', 'id'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Prestataire $prestataire)
+    {
+        $prestataire->update($request->all());
+
+        // return 'Prestataire modifié !';
+        return view('prestataires.index');
+    }
+
+    /*
+     * Remove the specified resource from storage.
+     *
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    // public function destroy($id)
+    // {
+    //     $prestataire = Prestataire::find($id);
+    //     $prestataire->delete();
+    //     $message = $prestataire->raisonSociale.' a été supprimé(e)';
+
+    //     return redirect()->route('prestataires.index');
+    // }
+
+    // public function destroy(Prestataire $prestataire)
+    // {
+    //     return view('prestataires.delete', compact('prestataire', 'id'));
+    // }
+
+    public function destroy($id)
+    {
+        $prestataire = Prestataire::find($id);
+        $prestataire->delete();
+        $message = $prestataire->raisonSociale.' a été supprimé(e) de la base !';
+
+        return redirect()->route('prestataires.index')->with(compact('message'));
+    }
+}
