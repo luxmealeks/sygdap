@@ -19,11 +19,7 @@
         </div><!-- /.container-fluid -->
     </section>
     <section class="content">
-        @if (session('message'))
-        <div class="alert alert-success">
-            {{ session('message') }}
-        </div>
-        @endif
+
         <div class="row">
             <div class="col-12">
 
@@ -128,48 +124,47 @@
 
                         <div class="invoice-box">
                             <table cellpadding="0" cellspacing="0">
-                                 @foreach($prestataire->pieces as $piece)
                                 <tr class="top">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td class="title">
-                                {{-- <img src="https://www.sparksuite.com/images/logo.png" style="width:100%; max-width:300px;"> --}}
-                            </td>
+                                    <td colspan="2">
+                                        <table>
+                                            <tr>
+                                                <td class="title">
+                                                    {{-- <img src="https://www.sparksuite.com/images/logo.png" style="width:100%; max-width:300px;"> --}}
+                                                </td>
 
-                            <td>
-                                Fiche N°: {{$prestataire->id}} <br>
-                                Créée le : {{$piece->created_at}} <br>
+                                                <td>
+                                                    Fiche Prestataire N°: {{$prestataire->id}} <br>
+                                                    {{-- Créée le : {{$piece->created_at}} <br> --}}
 
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
 
-            <tr class="information">
-                <td colspan="2">
-                    <table>
-                        <tr>
-                            <td>
-                                Direction de l'Administration.<br>
-                                Générale et de l'Equipement<br>
-                                -------------<br>
-                                Division des Marchés Publiques (DMP)<br>
+                                <tr class="information">
+                                    <td colspan="2">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    Direction de l'Administration.<br>
+                                                    Générale et de l'Equipement<br>
+                                                    -------------<br>
+                                                    Division des Marchés Publiques (DMP)<br>
 
-                            </td>
+                                                </td>
 
-                            <td>
-                                Raison sociale :{{$prestataire->raisonSociale}}.<br>
-                                NINEA: {{$prestataire->ninea}}<br>
-                                RC: {{$prestataire->registreCommerce}}<br>
-                                E-mail:{{$prestataire->email}}
+                                                <td>
+                                                    Raison sociale :{{$prestataire->raisonSociale}}.<br>
+                                                    NINEA: {{$prestataire->ninea}}<br>
+                                                    RC: {{$prestataire->registreCommerce}}<br>
+                                                    E-mail:{{$prestataire->email}}
 
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
                                 <tr class="top">
                                     <td colspan="2">
                                         <table>
@@ -189,12 +184,11 @@
                                 <tr class="information">
                                     <td colspan="2">
                                         <table>
-                                            <tr class="heading">
+                                            <tr class="information">
 
-                                                <td>Détails du prestataires <br>
 
                                                 </td>
-                                                <tr class="details">
+                                                <tr class="information">
                                                     <td>
                                                         TYPE PRESTATAIRE : {{$prestataire->type->libelle}}
                                                         SECTEUR D'ACTIVITE :   {{$prestataire->secteur}}<br>
@@ -204,27 +198,26 @@
                                                         ADRESSE :   {{$prestataire->adresse}}<br>
                                                     </td>
                                                 </tr>
+                                                <td> <br>
+
                                                 <tr class="heading">
 
                                                     <td>NOM DE LA PIECE<br> </td>
-                                                    <td>PIECE CHARGEE </td>
-                                                    {{-- <td>DATE DE CREATION </td> --}}
-                                                    <td>Actions </td>
+                                                    <td>Fichier joint </td>
+
 
                                                     <tr class="item">
                                                     </tr>
+                                                   @foreach($pieces as $piece)
 
-                                                    <tr class="details">
-                                                        <td>
+                                                    <tr class="item">
+                                                     <td>
                                                             {{$piece->nompiece}} <br>
                                                         </td>
                                                         <td>
                                                             {{$piece->img}}
                                                         </td>
-                                                        <td>
-                                                            {{$piece->created_at}} <br>
-                                                        </td>
-                                                        <td>
+                                                          {{--   <td>
                                                             <a href="{{ route('pieces.edit',$piece->id)}}" class="btn btn-primary">
                                                                 <i class="fa fa-edit"></i>
                                                             </a>
@@ -232,18 +225,19 @@
                                                                 data-target="#DeleteModal" class="btn btn-xs btn-danger">
 
                                                                 <i class="fa fa-trash"></i> </a>
-                                                            </td>
-                                                            @endforeach
-                                                        </tr>
+                                                            </td> --}}
+
+                                                        @endforeach
                                                     </tr>
+                                                </tr>
 
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
 
 
-                                    {{--  <div id="DeleteModal" class="modal fade text-danger" role="dialog">
+                       {{--             <div id="DeleteModal" class="modal fade text-danger" role="dialog">
                                         <form action="{{ route('pieces.destroy', $piece->id)}}" id="deleteForm" method="post">
                                             <div class="modal-dialog " role="document">
                                                 <div class="modal-content">
@@ -264,22 +258,21 @@
                                         </form>
 
                                     </div> --}}
-                                    <div class="noPrint">
-                                         <a class="btn btn-primary" href="{{route('pieces.create')}}?prestataire={{$prestataire->id}}" role="button">Ajouter pièce</a>
-
-                                        <a class="btn btn-primary" href="{!! route('prestataires.printpdf',['download'=>'pdf', 'id'=> $prestataire->id,
-                                            'view'=>'prestataires.printpdf',
-                                            'name'=>'agrement']) !!}"
-                                            class="noPrint">Exporter PDF</a>
-                                        </div>
 
 
+                                <div class="noPrint">
+                                    <a class="btn btn-primary" href="{{route('pieces.create')}}?prestataire={{$prestataire->id}}" role="button">Ajouter pièce</a>
 
+                                    <a class="btn btn-primary" href="{!! route('prestataires.printpdf',['download'=>'pdf', 'id'=> $prestataire->id,
+                                        'view'=>'prestataires.printpdf',
+                                        'name'=>'agrement']) !!}"
+                                        class="noPrint">Exporter PDF</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
-            </div>
-            @endsection
+                </div>
+            </section>
+        </div>
+@endsection

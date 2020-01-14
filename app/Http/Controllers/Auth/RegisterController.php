@@ -35,7 +35,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth'); //METTRE GUEST SI ON VEUT CONTOURNER LE MIDDLEWARE
+        $this->middleware('guest'); //METTRE GUEST SI ON VEUT CONTOURNER LE MIDDLEWARE
     }
 
     /**
